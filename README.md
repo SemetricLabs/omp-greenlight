@@ -15,6 +15,8 @@ Safety, on a 140-row labelled command corpus — of the 94 rows marked *review* 
 |---|---|---|---|---|
 | Unsafe auto-approvals (of 94) | 0 | **0** | 1 | 7 |
 
+![Prompts removed and unsafe auto-approvals by preset](assets/prompts-and-safety.png)
+
 Latency ~310 ms p50, ~450 ms p95 **per gated call**; Jev answers all questions in parallel rather than autoregressively. State is ~1,258 input tokens per gated call. `yolo` mode: Greenlight is a complete no-op — zero API calls.
 
 ## Install
@@ -68,6 +70,8 @@ A "smart gate" built on a frontier model does the same job for far more money. P
 | Anthropic Opus 5 | $5 / $25 | $7.04 | 133x |
 | OpenAI gpt-6-astra | $10 / $50 | $13.33 | 252x |
 
+![Cost per 1,000 gated calls](assets/cost-per-1000-calls.png)
+
 Sources: TypeSafe model pricing (`docs.typesafe.ai`), Anthropic list-price PDF, OpenAI API pricing, all read 2026-09-18. Assumptions that matter: one request per call; the LLM emits only a verdict with no chain-of-thought (a reasoning gate costs more); no prompt caching (the state changes every call). Jev's public rate is not proven to be unsubsidized — TypeSafe has said so themselves. The whole 1,013-call measurement above cost about **$0.05**.
 
 ## How it works
@@ -78,6 +82,8 @@ Sources: TypeSafe model pricing (`docs.typesafe.ai`), Anthropic list-price PDF, 
 4. Every decision is appended to the session (`/greenlight-decisions` shows it) and optionally to a JSONL sink via `GREENLIGHT_LOG`.
 
 ### Two things deliberately not shipped
+
+![Which parts of the state help](assets/state-ablation.png)
 
 **The agent's own prose is never sent.** Adding the agent's summary of what it was doing to the grading state took corpus safety misses from **0 to 3** — the model reads the agent's justification and agrees with it. Only tool-call history is sent. A length-matched padding control scored 13.3% against the real window's 35.9%, which is how we know the gain is call information rather than Jev reacting to longer input.
 
