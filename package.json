@@ -1,0 +1,38 @@
+{
+  "name": "omp-greenlight",
+  "version": "0.1.0",
+  "description": "Jev-graded tool approvals for oh-my-pi: suppress the prompts you did not need, keep the ones that matter.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "omp",
+    "oh-my-pi",
+    "plugin",
+    "extension",
+    "approval",
+    "typesafe",
+    "jev",
+    "agent-safety"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "omp": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^24.12.4",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

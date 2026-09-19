@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: typecheck the extension
+        working-directory: .
+        run: |
+          npm install --no-audit --no-fund
+          npm run typecheck
+      - uses: astral-sh/setup-uv@v5
+      - name: python tests (no network, no API key)
+        run: uv run pytest eval/tests -q
