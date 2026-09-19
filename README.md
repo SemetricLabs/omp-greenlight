@@ -87,6 +87,13 @@ Sources: TypeSafe model pricing (`docs.typesafe.ai`), Anthropic list-price PDF, 
 
 Not a sandbox. Not a security boundary. Installing it hands auto-approval authority for shell commands to a third-party model (TypeSafe's Jev, served from `api.typesafe.ai`). The host's own critical-pattern rules and your `bash.patterns: deny` remain the only deterministic floor — and they still fire ahead of Greenlight, which is covered by a test.
 
+## Security
+
+Data flow, failure behaviour per condition, threat model, and how to report a vulnerability are in
+[SECURITY.md](SECURITY.md). The short version: your task prompt, a summary of recent tool calls, the
+working directory, and the proposed call go to `api.typesafe.ai` on each gated call; file bodies and
+the API key never do; `yolo` sends nothing.
+
 ## Scope in v0.1
 
 Gates `bash`, `eval`, `write`, `edit`, `apply_patch`, `delete`, `move`. Prefers `bash` and `eval`, where the measured signal is.
@@ -101,7 +108,12 @@ uv run eval/threshold_sweep.py   # the preset table
 uv run eval/replay_history.py && uv run eval/replay.py   # your own OMP session history
 uv run eval/window_sweep.py      # tool-history window sizes + falsification
 uv run eval/sandbox.py           # end-to-end plugin tests in a disposable /tmp sandbox
+uv run pytest eval/tests -q      # the classifier's decision core (53 tests, no network)
+npm run typecheck                # the extension's own type gate
 ```
+
+Every number above is regenerable this way; `eval/README.md` says what each script is for and
+which claims each one supports.
 
 The eval harness reuses the same zero-dependency Python client (`jev/`) that produced the published numbers. Nothing in this repo phones home except the gate itself.
 
