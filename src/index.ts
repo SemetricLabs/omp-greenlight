@@ -32,7 +32,7 @@ const GATED: Record<string, true> = {
   delete: true,
   move: true,
 };
-const DECISION_TYPE = "com.semetric.greenlight.decision";
+const DECISION_TYPE = "greenlight.decision";
 const BODY_KEYS = ["content", "new_string", "old_string", "newText", "oldText"];
 const MAX_ARGS = 200;
 

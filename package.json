@@ -34,5 +34,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
-  }
+  },
+  "repository": "github:ipriyaaanshu/omp-greenlight",
+  "author": "Priyanshu Sharma"
 }
