@@ -105,6 +105,37 @@ uv run eval/sandbox.py           # end-to-end plugin tests in a disposable /tmp 
 
 The eval harness reuses the same zero-dependency Python client (`jev/`) that produced the published numbers. Nothing in this repo phones home except the gate itself.
 
+## Related work
+
+The idea of grading agent tool calls with a classifier is not ours, and we are not the first to
+point Jev at it. What is unusual here is the evidence, so the differences are worth stating plainly.
+
+- **[specpi-jev-guard](https://github.com/TannerMidd/specpi-jev-guard)** (Pi, via OpenRouter) —
+  local hard-deny and read-only rules first, then a single Jev *danger score* with two bands
+  (block ≥ 0.8, ask ≥ 0.35). Shipped before this. Its README reports a false negative from its own
+  fast path: `find / -delete` scored 0.96 (a clear block) but was allowed because the fast path saw
+  the `find` binary and called it read-only. That is the same failure mode that made us **delete**
+  our static fast path: it matched 0 of 1,013 real tool calls, so it bought nothing and could only
+  ever be a hole. Its obfuscation probe also matches ours — a base64'd `rm -rf /` lands in the *ask*
+  band, not the *block* band.
+- **[pi-automode PR #49](https://github.com/czottmann/pi-automode/pull/49)** — the same classifier
+  idea applied to Pi's auto mode rather than per-call approvals.
+- **[laya](https://github.com/NandhaKishorM/laya)** — an open, CPU-runnable classifier in the same
+  niche, for people who want the decision to stay local.
+
+What is specific to this repo:
+
+| | specpi-jev-guard | Greenlight |
+|---|---|---|
+| Question asked | one danger score | verdict + severity + in-scope (one parallel request) |
+| Evidence | 124 probed commands | 1,013 **real** tool calls: **40.9% of prompts removed**, plus the 140-row corpus |
+| Static fast path | kept (and documented a miss) | measured at 0/1,013 matches, deleted |
+| Agent's own prose in state | — | tested, produced 3 safety misses, removed |
+| Cost comparison | — | Jev $0.05 per 1,000 gated calls vs $5.63–$7.04 for a frontier-model gate |
+| Risk dial | two thresholds | four presets, each measured for prompts removed *and* unsafe auto-approvals |
+
+We would rather be the project with the honest number than the first one.
+
 ## Limitations
 
 Agent-authored text can be obfuscated around: the grading state excludes the agent's prose (removed after it made dangerous rows look acceptable), but a determined agent still shapes its own inputs. Host-bridge tool calls (browser, computer-use) are invisible to the gate. Headless runs cannot prompt a human, so a non-allow verdict in a headless session blocks only the `deny` class and defers the rest — do not run Greenlight where nobody is reading. Live traffic carries no ground-truth labels: we can count prompts removed, not correctness, so the 140-row corpus is the only labelled safety evidence and it is small. Latency adds ~310 ms p50 per gated call.
