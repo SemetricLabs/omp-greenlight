@@ -2,6 +2,8 @@
 
 An OMP plugin that grades every **gated** tool call with TypeSafe's [Jev](https://docs.typesafe.ai) — a "System One" classifier — and suppresses the approval prompt when Jev says allow. Everything else still prompts, with Jev's reasoning attached. You review only the calls that matter.
 
+![Most calls pass straight through; the ones that matter are held back](assets/hero.png)
+
 Measured on real traffic: **1,013 tool calls across 10 sessions, 8.95 session-hours.**
 
 | Preset | conservative | default | permissive | aggressive |
