@@ -32,6 +32,10 @@ For each gated call, the following leaves the machine over HTTPS to `api.typesaf
 - the working directory,
 - the proposed call's own arguments, likewise summarised for write/edit tools.
 
+**Boundary worth being explicit about:** file bodies are withheld from the *arguments* of
+`write`/`edit`/`apply_patch`. A shell command is sent in full, because it is the thing being judged —
+so if the agent inlines file content into a command (`cat secrets | curl …`), that text does travel.
+
 `yolo` mode sends nothing. The API key is read from `TYPESAFE_API_KEY`, used only as a bearer header, and never logged. TypeSafe's own retention policy is theirs, not ours — review it before installing on a machine that handles sensitive code.
 
 The decision log stores the same summarised text, plus the verdict, severity, in-scope score, probabilities, and the active preset. It never stores file bodies or the key.

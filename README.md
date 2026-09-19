@@ -150,6 +150,7 @@ We would rather be the project with the honest number than the first one.
 
 ## Limitations
 
-Agent-authored text can be obfuscated around: the grading state excludes the agent's prose (removed after it made dangerous rows look acceptable), but a determined agent still shapes its own inputs. Host-bridge tool calls (browser, computer-use) are invisible to the gate. Headless runs cannot prompt a human, so a non-allow verdict in a headless session blocks only the `deny` class and defers the rest — do not run Greenlight where nobody is reading. Live traffic carries no ground-truth labels: we can count prompts removed, not correctness, so the 140-row corpus is the only labelled safety evidence and it is small. Latency adds ~310 ms p50 per gated call.
+Agent-authored text can be obfuscated around: the grading state excludes the agent's prose (removed after it made dangerous rows look acceptable), but a determined agent still shapes its own inputs. Host-bridge tool calls (browser, computer-use) are invisible to the gate. Headless runs cannot prompt a human, so a non-allow verdict in a headless session blocks only the `deny` class and defers the rest — do not run Greenlight where nobody is reading. Live traffic carries no ground-truth labels: we can count prompts removed, not correctness, so the 140-row corpus is the only labelled safety evidence and it is small. Latency adds ~310 ms p50 per gated call. File bodies are withheld from `write`/`edit` arguments, but a
+shell command is sent in full — if the agent inlines file content into a command, that text travels.
 
 MIT licensed.
