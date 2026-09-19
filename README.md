@@ -27,6 +27,12 @@ Latency ~310 ms p50, ~450 ms p95 **per gated call**; Jev answers all questions i
 omp plugin install github:ipriyaaanshu/omp-greenlight
 ```
 
+Pin the version if you would rather not track `main` (recommended for anything unattended):
+
+```
+omp plugin install github:ipriyaaanshu/omp-greenlight#v0.1.0
+```
+
 Trial without installing anything:
 
 ```
